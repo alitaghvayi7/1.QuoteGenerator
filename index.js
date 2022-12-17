@@ -2,6 +2,7 @@
 let arrayQuotes;
 let generatingQuote;
 let activeQuote;
+let requestCount = 0;
 
 const quoteParagraph = document.querySelector('.quote-content>p');
 const quoteAuthor = document.querySelector('.quote-author');
@@ -42,16 +43,19 @@ function toggleLoader() {
 async function GenerateQuote() {
     generatingQuote = true;
     toggleLoader();
-    arrayQuotes = await getQuotes();
+    if (requestCount < 1) {
+        arrayQuotes = await getQuotes();
+    }
     activeQuote = arrayQuotes[createRandomNumber(arrayQuotes.length)];
     generatingQuote = false;
     toggleLoader();
     updateDom(activeQuote);
+    requestCount++;
 }
 
-function tweetSend(){
+function tweetSend() {
     const twitterURL = `https://twitter.com/intent/tweet?text=${activeQuote.text}`;
-    window.open(twitterURL,'_blank');
+    window.open(twitterURL, '_blank');
 }
 
 
@@ -60,5 +64,5 @@ window.addEventListener('load', () => {
 });
 
 newQuoteButton.addEventListener('click', GenerateQuote)
-twitterQuoteSendButton.addEventListener('click',tweetSend)
+twitterQuoteSendButton.addEventListener('click', tweetSend)
 
